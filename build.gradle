@@ -18,17 +18,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-android {
-    compileSdkVersion 16
-    buildToolsVersion '23.0.1'
-    dexOptions {
-        incremental true
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
-    }
-}
-dependencies {
-}

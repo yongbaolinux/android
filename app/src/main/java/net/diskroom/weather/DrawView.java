@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.SweepGradient;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
@@ -131,11 +132,22 @@ public class DrawView extends View {
 
         //绘制数字
         int[] clocks = new int[]{1,4,7,10};
-        int[] tide = new int[4];
+        int[] tide = new int[]{12,10,20,25};
 
-        for(int i=1;i<=12;i++){
+        int angle = clocks[0] * 30;     //小时数乘上30度
+        float xPointer = (float) (angle * Math.sin(angle*Math.PI/180)+circleXPointer);
+        float yPointer = (float) (circleYPointer-angle * Math.cos(angle*Math.PI/180));
 
+        Path path = new Path();
+        path.moveTo(xPointer,yPointer);
+        for(int i=1;i<clocks.length;i++){
+            angle = clocks[i] * 30;     //小时数乘上30度
+            xPointer = (float) (angle * Math.sin(angle*Math.PI/180) + circleXPointer);
+            yPointer = (float) (circleYPointer-angle * Math.cos(angle*Math.PI/180));
+            path.lineTo(xPointer,yPointer);
         }
+        path.close();
+        canvas.drawPath(path,mPaintCircle);
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
