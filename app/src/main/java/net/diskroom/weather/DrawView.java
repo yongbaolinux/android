@@ -37,6 +37,7 @@ public class DrawView extends View {
     private Paint mPaintCircle;
     private Paint mPaintNumber;
     private Paint mPaintRect;
+    private Paint mPaintPath;
 
     public DrawView(Context context) {
         super(context);
@@ -59,10 +60,15 @@ public class DrawView extends View {
         mPaintRect.setStyle(Paint.Style.FILL);
 
         mPaintCircle = new Paint();
-        mPaintCircle.setStyle(Paint.Style.STROKE);  //实心圆还是空心圆
+        mPaintCircle.setStyle(Paint.Style.FILL);  //实心圆还是空心圆
         mPaintCircle.setAntiAlias(true);            //抗锯齿效果
         mPaintCircle.setStrokeWidth(50);            //圆环的宽度
+        mPaintCircle.setARGB(0, 1, 1, 1);
 
+        mPaintPath = new Paint();
+        mPaintPath.setStyle(Paint.Style.STROKE);  //
+        mPaintPath.setAntiAlias(true);            //抗锯齿效果
+        mPaintPath.setStrokeWidth(50);            //
 
         mPaintNumber = new Paint();
         mPaintNumber.setTextSize(20);
@@ -117,37 +123,40 @@ public class DrawView extends View {
         height = getHeight();
         width = getWidth();
         circleXPointer = width / 2;
-        circleYPointer = height / 2;
+        circleYPointer = height / 2 - 30;
 
         /*for(int i=0;i<256;i++) {
             mPaintRect.setARGB(255,255-i,0,i);
             canvas.drawRect(100+i, 100, 101+i, 200, mPaintRect);
         }*/
+
+        //绘制数字
+        int[] clocks = new int[]{1,4,7,10};
+        int[] tide = new int[]{130,150,165,130};
+
+        int angle = clocks[0] * 30;     //小时数乘上30度
+        float xPointer = (float) (tide[0] * Math.sin(angle*Math.PI/180)+circleXPointer);
+        float yPointer = (float) (circleYPointer - tide[0] * Math.cos(angle*Math.PI/180));
+
+        Path path = new Path();
+        path.moveTo(xPointer, yPointer);
+        for(int i=1;i<clocks.length;i++){
+            angle = clocks[i] * 30;     //小时数乘上30度
+            xPointer = (float) (tide[i] * Math.sin(angle*Math.PI/180) + circleXPointer);
+            yPointer = (float) (circleYPointer - tide[i] * Math.cos(angle*Math.PI/180));
+            path.lineTo(xPointer,yPointer);
+        }
+        path.close();
+
         int[] doughnutColors = new int[3];
         doughnutColors[0] = 0xFFFF0000;
         doughnutColors[1] = 0xFF0000FF;
         doughnutColors[2] = 0xFFFF0000;
-        mPaintCircle.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
-        //canvas.drawCircle(circleXPointer, circleYPointer, 80, mPaintCircle);
+        mPaintPath.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
+        canvas.drawPath(path,mPaintPath);
 
-        //绘制数字
-        int[] clocks = new int[]{1,4,7,10};
-        int[] tide = new int[]{12,10,20,25};
-
-        int angle = clocks[0] * 30;     //小时数乘上30度
-        float xPointer = (float) (angle * Math.sin(angle*Math.PI/180)+circleXPointer);
-        float yPointer = (float) (circleYPointer-angle * Math.cos(angle*Math.PI/180));
-
-        Path path = new Path();
-        path.moveTo(xPointer,yPointer);
-        for(int i=1;i<clocks.length;i++){
-            angle = clocks[i] * 30;     //小时数乘上30度
-            xPointer = (float) (angle * Math.sin(angle*Math.PI/180) + circleXPointer);
-            yPointer = (float) (circleYPointer-angle * Math.cos(angle*Math.PI/180));
-            path.lineTo(xPointer,yPointer);
-        }
-        path.close();
-        canvas.drawPath(path,mPaintCircle);
+        //绘制贝塞尔曲线后再画圆
+        canvas.drawCircle(circleXPointer, circleYPointer, 100, mPaintPath);
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
