@@ -58,9 +58,9 @@ public class DrawView extends View {
         mPaintRect.setStyle(Paint.Style.FILL);
 
         mPaintCircle = new Paint();
-        mPaintCircle.setStyle(Paint.Style.FILL);  //实心圆还是空心圆
+        mPaintCircle.setStyle(Paint.Style.STROKE);  //实心圆还是空心圆
         mPaintCircle.setAntiAlias(true);            //抗锯齿效果
-        //mPaintCircle.setStrokeWidth(50);            //圆环的宽度
+        mPaintCircle.setStrokeWidth(50);            //圆环的宽度
 
 
         mPaintNumber = new Paint();
@@ -122,12 +122,20 @@ public class DrawView extends View {
             mPaintRect.setARGB(255,255-i,0,i);
             canvas.drawRect(100+i, 100, 101+i, 200, mPaintRect);
         }*/
-        int[] doughnutColors = new int[2];
+        int[] doughnutColors = new int[3];
         doughnutColors[0] = 0xFFFF0000;
         doughnutColors[1] = 0xFF0000FF;
+        doughnutColors[2] = 0xFFFF0000;
         mPaintCircle.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
-        canvas.drawCircle(circleXPointer, circleYPointer, 80, mPaintCircle);
+        //canvas.drawCircle(circleXPointer, circleYPointer, 80, mPaintCircle);
 
+        //绘制数字
+        int[] clocks = new int[]{1,4,7,10};
+        int[] tide = new int[4];
+
+        for(int i=1;i<=12;i++){
+
+        }
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
