@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LogUtils.v("the threadId is "+Thread.currentThread().getId());
+        //LogUtils.v("the threadId is "+Thread.currentThread().getId());
 
         new Thread(){
             public void run(){

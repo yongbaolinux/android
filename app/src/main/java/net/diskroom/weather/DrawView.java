@@ -10,6 +10,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.apkfuns.logutils.LogUtils;
+
 import net.diskroom.weather.R;
 
 /**
@@ -24,6 +26,15 @@ public class DrawView extends View {
     private TextPaint mTextPaint;
     private float mTextWidth;
     private float mTextHeight;
+
+    private int width;                  //canvas  画布宽度
+    private int height;                 //canvas  画布高度
+    private float circleXPointer;         //圆心 x 坐标
+    private float circleYPointer;         //圆心 y 坐标
+
+    private Paint mPaintCircle;
+    private Paint mPaintNumber;
+    private Paint mPaintRect;
 
     public DrawView(Context context) {
         super(context);
@@ -41,6 +52,18 @@ public class DrawView extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+
+        mPaintRect = new Paint();
+        mPaintRect.setStyle(Paint.Style.FILL);
+
+        mPaintCircle = new Paint();
+        mPaintCircle.setStyle(Paint.Style.STROKE);
+        mPaintCircle.setColor(Color.BLUE);
+
+        mPaintNumber = new Paint();
+        mPaintNumber.setTextSize(20);
+        mPaintNumber.setColor(Color.WHITE);
+
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.DrawView, defStyle, 0);
@@ -82,9 +105,22 @@ public class DrawView extends View {
         mTextHeight = fontMetrics.bottom;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        height = getHeight();
+        width = getWidth();
+        circleXPointer = width / 2;
+        circleYPointer = height / 2;
+
+        for(int i=0;i<256;i++) {
+            mPaintRect.setARGB(255,255-i,0,i);
+            canvas.drawRect(100+i, 100, 101+i, 200, mPaintRect);
+        }
+        //canvas.drawCircle(circleXPointer, circleYPointer, 120, mPaintCircle);
+
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
