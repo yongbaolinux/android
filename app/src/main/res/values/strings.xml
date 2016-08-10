@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">weather</string>
+    <string name="WindDirection">Wind Direction</string>
+    <string name="RainRate">Rain Rate</string>
+    <string name="S.W."></string>
+    <string name="EightPercent"></string>
+</resources>
