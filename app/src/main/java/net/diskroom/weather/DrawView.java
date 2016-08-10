@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.SweepGradient;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -57,8 +58,10 @@ public class DrawView extends View {
         mPaintRect.setStyle(Paint.Style.FILL);
 
         mPaintCircle = new Paint();
-        mPaintCircle.setStyle(Paint.Style.STROKE);
-        mPaintCircle.setColor(Color.BLUE);
+        mPaintCircle.setStyle(Paint.Style.FILL);  //实心圆还是空心圆
+        mPaintCircle.setAntiAlias(true);            //抗锯齿效果
+        //mPaintCircle.setStrokeWidth(50);            //圆环的宽度
+
 
         mPaintNumber = new Paint();
         mPaintNumber.setTextSize(20);
@@ -115,11 +118,15 @@ public class DrawView extends View {
         circleXPointer = width / 2;
         circleYPointer = height / 2;
 
-        for(int i=0;i<256;i++) {
+        /*for(int i=0;i<256;i++) {
             mPaintRect.setARGB(255,255-i,0,i);
             canvas.drawRect(100+i, 100, 101+i, 200, mPaintRect);
-        }
-        //canvas.drawCircle(circleXPointer, circleYPointer, 120, mPaintCircle);
+        }*/
+        int[] doughnutColors = new int[2];
+        doughnutColors[0] = 0xFFFF0000;
+        doughnutColors[1] = 0xFF0000FF;
+        mPaintCircle.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
+        canvas.drawCircle(circleXPointer, circleYPointer, 80, mPaintCircle);
 
 
         // TODO: consider storing these as member variables to reduce
