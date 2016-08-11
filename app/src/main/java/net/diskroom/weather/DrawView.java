@@ -38,6 +38,7 @@ public class DrawView extends View {
     private Paint mPaintNumber;
     private Paint mPaintRect;
     private Paint mPaintPath;
+    private Paint mPaintPathTest;
 
     public DrawView(Context context) {
         super(context);
@@ -63,7 +64,6 @@ public class DrawView extends View {
         mPaintCircle.setStyle(Paint.Style.FILL);  //实心圆还是空心圆
         mPaintCircle.setAntiAlias(true);            //抗锯齿效果
         mPaintCircle.setStrokeWidth(50);            //圆环的宽度
-        mPaintCircle.setARGB(0, 1, 1, 1);
 
         mPaintPath = new Paint();
         mPaintPath.setStyle(Paint.Style.STROKE);  //
@@ -131,9 +131,10 @@ public class DrawView extends View {
         }*/
 
         //绘制数字
-        int[] clocks = new int[]{1,4,7,10};
-        int[] tide = new int[]{130,150,165,130};
+        int[] clocks = new int[]{1,4,7,10};         //时间
+        int[] tide = new int[]{130,150,165,130};    //潮汐数据
 
+        //绘制贝塞尔曲线
         int angle = clocks[0] * 30;     //小时数乘上30度
         float xPointer = (float) (tide[0] * Math.sin(angle*Math.PI/180)+circleXPointer);
         float yPointer = (float) (circleYPointer - tide[0] * Math.cos(angle*Math.PI/180));
@@ -157,6 +158,7 @@ public class DrawView extends View {
 
         //绘制贝塞尔曲线后再画圆
         canvas.drawCircle(circleXPointer, circleYPointer, 100, mPaintPath);
+
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
