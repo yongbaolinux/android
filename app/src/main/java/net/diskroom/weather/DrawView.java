@@ -16,6 +16,9 @@ import com.apkfuns.logutils.LogUtils;
 
 import net.diskroom.weather.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * TODO: document your custom view class.
  */
@@ -130,30 +133,52 @@ public class DrawView extends View {
             canvas.drawRect(100+i, 100, 101+i, 200, mPaintRect);
         }*/
 
-        //绘制数字
+        //初始化时间数据、潮汐数据和颜色数据
         int[] clocks = new int[]{1,4,7,10};         //时间
         int[] tide = new int[]{130,150,165,130};    //潮汐数据
-
-        //绘制贝塞尔曲线
-        int angle = clocks[0] * 30;     //小时数乘上30度
-        float xPointer = (float) (tide[0] * Math.sin(angle*Math.PI/180)+circleXPointer);
-        float yPointer = (float) (circleYPointer - tide[0] * Math.cos(angle*Math.PI/180));
-
-        Path path = new Path();
-        path.moveTo(xPointer, yPointer);
-        for(int i=1;i<clocks.length;i++){
-            angle = clocks[i] * 30;     //小时数乘上30度
-            xPointer = (float) (tide[i] * Math.sin(angle*Math.PI/180) + circleXPointer);
-            yPointer = (float) (circleYPointer - tide[i] * Math.cos(angle*Math.PI/180));
-            path.lineTo(xPointer,yPointer);
-        }
-        path.close();
-
-        int[] doughnutColors = new int[3];
+        int[] doughnutColors = new int[3];          //颜色数据
         doughnutColors[0] = 0xFFFF0000;
         doughnutColors[1] = 0xFF0000FF;
         doughnutColors[2] = 0xFFFF0000;
         mPaintPath.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
+
+        //添加点
+        List<Float> points = new ArrayList<Float>();
+        int angle = 0;     //小时数乘上30度
+        float xPointer = 0;
+        float yPointer = 0;
+        for(int i=0;i<clocks.length;i++){
+            angle = clocks[i] * 30;     //小时数乘上30度
+            xPointer = (float) (tide[i] * Math.sin(angle*Math.PI/180) + circleXPointer);
+            yPointer = (float) (circleYPointer - tide[i] * Math.cos(angle*Math.PI/180));
+            points.add(xPointer);
+            points.add(yPointer);
+        }
+        //绘制贝塞尔曲线
+        Path path = new Path();
+        path.moveTo(points.get(0), points.get(1));
+        Point p1 = new Point();
+        Point p2 = new Point();
+        Point p3 = new Point();
+        int length = points.size();
+        float mFirstMultiplier = 0.3f;
+        // 设置第二个控制点为66%的距离
+        float mSecondMultiplier = 1 - mFirstMultiplier;
+
+        for (int b = 0; b < length; b += 2) {
+            int nextIndex = b + 2 < length ? b + 2 : b;
+            int nextNextIndex = b + 4 < length ? b + 4 : nextIndex;
+            // 设置第一个控制点
+            calc(points, p1, b, nextIndex, mSecondMultiplier);
+            // 设置第二个控制点
+            p2.setX(points.get(nextIndex));
+            p2.setY(points.get(nextIndex + 1));
+            // 设置第三个控制点
+            calc(points, p3, nextIndex, nextNextIndex, mFirstMultiplier);
+            // 最后一个点就是赛贝尔曲线上的点
+            path.cubicTo(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY());
+        }
+
         canvas.drawPath(path,mPaintPath);
 
         //绘制贝塞尔曲线后再画圆
@@ -261,5 +286,25 @@ public class DrawView extends View {
      */
     public void setExampleDrawable(Drawable exampleDrawable) {
         mExampleDrawable = exampleDrawable;
+    }
+
+    /**
+     * 计算控制点
+     * @param points
+     * @param result
+     * @param index1
+     * @param index2
+     * @param multiplier
+     */
+    private void calc(List<Float> points, Point result, int index1, int index2, final float multiplier) {
+        float p1x = points.get(index1);
+        float p1y = points.get(index1 + 1);
+        float p2x = points.get(index2);
+        float p2y = points.get(index2 + 1);
+
+        float diffX = p2x - p1x;
+        float diffY = p2y - p1y;
+        result.setX(p1x + (diffX * multiplier));
+        result.setY(p1y + (diffY * multiplier));
     }
 }
