@@ -134,12 +134,12 @@ public class DrawView extends View {
         }*/
 
         //初始化时间数据、潮汐数据和颜色数据
-        int[] clocks = new int[]{1,4,7,10};         //时间
-        int[] tide = new int[]{130,150,165,130};    //潮汐数据
+        int[] clocks = new int[]{1,4,7,10,1};         //时间
+        int[] tide = new int[]{130,150,165,130,120};    //潮汐数据
         int[] doughnutColors = new int[3];          //颜色数据
-        doughnutColors[0] = 0xFFFF0000;
-        doughnutColors[1] = 0xFF0000FF;
-        doughnutColors[2] = 0xFFFF0000;
+        doughnutColors[0] = 0xFFc8d383;
+        doughnutColors[1] = 0xFF62da7e;
+        doughnutColors[2] = 0xFFc8d383;
         mPaintPath.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
 
         //添加点
