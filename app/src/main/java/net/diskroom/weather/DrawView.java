@@ -14,7 +14,6 @@ import android.view.View;
 
 import com.apkfuns.logutils.LogUtils;
 
-import net.diskroom.weather.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +68,7 @@ public class DrawView extends View {
         mPaintCircle.setStrokeWidth(50);            //圆环的宽度
 
         mPaintPath = new Paint();
-        mPaintPath.setStyle(Paint.Style.STROKE);  //
+        mPaintPath.setStyle(Paint.Style.STROKE);  //空心圆
         mPaintPath.setAntiAlias(true);            //抗锯齿效果
         mPaintPath.setStrokeWidth(50);            //
 
@@ -134,8 +133,8 @@ public class DrawView extends View {
         }*/
 
         //初始化时间数据、潮汐数据和颜色数据
-        int[] clocks = new int[]{1,4,7,10};         //时间
-        int[] tide = new int[]{130,150,165,130};    //潮汐数据
+        int[] clocks = new int[]{1,4,7,10,1,2};         //时间
+        int[] tide = new int[]{130,150,165,130,130,100};    //潮汐数据
         int[] doughnutColors = new int[3];          //颜色数据
         doughnutColors[0] = 0xFFFF0000;
         doughnutColors[1] = 0xFF0000FF;
@@ -176,14 +175,18 @@ public class DrawView extends View {
             // 设置第三个控制点
             calc(points, p3, nextIndex, nextNextIndex, mFirstMultiplier);
             // 最后一个点就是赛贝尔曲线上的点
+            //canvas.drawCircle(p1.getX(), p1.getY(), 2, mPaintPath);
+            //canvas.drawCircle(p2.getX(), p2.getY(), 2, mPaintPath);
+            //canvas.drawCircle(p3.getX(), p3.getY(), 2, mPaintPath);
+
             path.cubicTo(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY());
         }
-
+        path.close();
         canvas.drawPath(path,mPaintPath);
 
         //绘制贝塞尔曲线后再画圆
-        canvas.drawCircle(circleXPointer, circleYPointer, 100, mPaintPath);
-
+        mPaintPath.setStrokeWidth(40);      //调整画笔大小
+        canvas.drawCircle(circleXPointer, circleYPointer, 90, mPaintPath);
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
