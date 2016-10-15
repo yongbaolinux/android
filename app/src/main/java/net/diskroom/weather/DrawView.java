@@ -12,8 +12,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.apkfuns.logutils.LogUtils;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +35,7 @@ public class DrawView extends View {
     private float circleYPointer;         //圆心 y 坐标
 
     private Paint mPaintCircle;
+    private Paint mPaintLine;
     private Paint mPaintNumber;
     private Paint mPaintRect;
     private Paint mPaintPath;
@@ -63,14 +62,20 @@ public class DrawView extends View {
         mPaintRect.setStyle(Paint.Style.FILL);
 
         mPaintCircle = new Paint();
-        mPaintCircle.setStyle(Paint.Style.FILL);  //实心圆还是空心圆
-        mPaintCircle.setAntiAlias(true);            //抗锯齿效果
-        mPaintCircle.setStrokeWidth(50);            //圆环的宽度
+        mPaintCircle.setStyle(Paint.Style.FILL); //实心圆还是空心圆
+        mPaintCircle.setAntiAlias(true);         //抗锯齿效果
+        mPaintCircle.setStrokeWidth(1);         //圆环的宽度
+        mPaintCircle.setColor(Color.WHITE);
+
+        mPaintLine = new Paint();                //直线画笔
+        mPaintLine.setAntiAlias(true);           //抗锯齿效果
+        mPaintLine.setStrokeWidth(1);            //圆环的宽度
+        mPaintLine.setColor(Color.WHITE);      //画笔颜色
 
         mPaintPath = new Paint();
-        mPaintPath.setStyle(Paint.Style.STROKE);  //空心圆
-        mPaintPath.setAntiAlias(true);            //抗锯齿效果
-        mPaintPath.setStrokeWidth(50);            //
+        mPaintPath.setStyle(Paint.Style.FILL);   //填充模式
+        mPaintPath.setAntiAlias(true);           //抗锯齿效果
+        //mPaintPath.setStrokeWidth(0);            //画笔宽度
 
         mPaintNumber = new Paint();
         mPaintNumber.setTextSize(20);
@@ -96,7 +101,6 @@ public class DrawView extends View {
                     R.styleable.DrawView_exampleDrawable);
             mExampleDrawable.setCallback(this);
         }
-
         a.recycle();
 
         // Set up a default TextPaint object
@@ -124,8 +128,8 @@ public class DrawView extends View {
 
         height = getHeight();
         width = getWidth();
-        circleXPointer = width / 2;
-        circleYPointer = height / 2 - 30;
+        circleXPointer = width / 2;                 //圆心 X坐标
+        circleYPointer = height / 2 - 30;           //圆心 Y坐标
 
         /*for(int i=0;i<256;i++) {
             mPaintRect.setARGB(255,255-i,0,i);
@@ -133,48 +137,80 @@ public class DrawView extends View {
         }*/
 
         //初始化时间数据、潮汐数据和颜色数据
-        int[] clocks = new int[]{1,4,7,10,1,2};         //时间
-        int[] tide = new int[]{130,150,165,130,130,100};    //潮汐数据
-        int[] doughnutColors = new int[3];          //颜色数据
+        int[] clocks = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};         //时间
+        int[] tide = new int[]{130,150,165,130,130,100,100,200,120,110,135,128};     //潮汐数据
+        int[] doughnutColors = new int[3];                              //颜色数据
         doughnutColors[0] = 0xFFFF0000;
         doughnutColors[1] = 0xFF0000FF;
         doughnutColors[2] = 0xFFFF0000;
         mPaintPath.setShader(new SweepGradient(circleXPointer, circleYPointer, doughnutColors, null));
 
         //添加点
-        List<Float> points = new ArrayList<Float>();
+        List<Point> points = new ArrayList<Point>();
         int angle = 0;     //小时数乘上30度
         float xPointer = 0;
         float yPointer = 0;
+
+        //// TODO: 2016/10/13 两个for循环合并
         for(int i=0;i<clocks.length;i++){
             angle = clocks[i] * 30;     //小时数乘上30度
             xPointer = (float) (tide[i] * Math.sin(angle*Math.PI/180) + circleXPointer);
             yPointer = (float) (circleYPointer - tide[i] * Math.cos(angle*Math.PI/180));
-            points.add(xPointer);
-            points.add(yPointer);
+            Point point = new Point(xPointer, yPointer);
+            points.add(point);
+            canvas.drawCircle(xPointer, yPointer, 1, mPaintCircle);
+            canvas.drawLine(circleXPointer,circleYPointer,xPointer,yPointer,mPaintLine);
         }
-        //绘制贝塞尔曲线
-        Path path = new Path();
-        path.moveTo(points.get(0), points.get(1));
-        Point p1 = new Point();
-        Point p2 = new Point();
-        Point p3 = new Point();
-        int length = points.size();
-        float mFirstMultiplier = 0.3f;
-        // 设置第二个控制点为66%的距离
-        float mSecondMultiplier = 1 - mFirstMultiplier;
 
+        Path path = new Path();
+        path.moveTo(points.get(0).getX(), points.get(0).getY());
+        //计算每个点的切线控制点
+        float delta = 30;           //控制点到节点的垂直距离
+        for(int i = 0;i<points.size()-1;i++){
+            angle = clocks[i] * 30;     //小时数乘上30度
+            //计算始发端的下行控制点
+            float startPointDownControlX = points.get(i).getX() + (float)Math.cos(angle*Math.PI/180)*delta;
+            float startPointDownControlY = points.get(i).getY() + (float)Math.sin(angle * Math.PI / 180)*delta;
+            //计算终点端的上行控制点
+            float endPointUpControlX = points.get(i+1).getX() - (float)Math.cos(angle*Math.PI/180)*delta;
+            float endPointUpControlY = points.get(i+1).getY() - (float)Math.sin(angle * Math.PI / 180)*delta;
+
+            //计算始发端的上行控制点
+            float startPointUpControlX = points.get(i).getX() - (float)Math.cos(angle*Math.PI/180)*delta;
+            float startPointUpControlY = points.get(i).getY() - (float)Math.sin(angle * Math.PI / 180)*delta;
+            //绘制控制线
+            //canvas.drawLine(startPointUpControlX,startPointUpControlY,startPointDownControlX,startPointDownControlY,mPaintLine);
+            //绘制三阶贝塞尔曲线
+            path.cubicTo(startPointDownControlX,startPointDownControlY,endPointUpControlX,endPointUpControlY,points.get(i+1).getX(),points.get(i+1).getY());
+        }
+        path.close();
+
+        //布尔运算去掉中间部分 API19
+        //Path circlePath = new Path();
+        //circlePath.addCircle(circleXPointer,circleYPointer,50,Path.Direction.CW);
+        //path.op(circlePath, Path.Op.DIFFERENCE);
+        canvas.drawPath(path,mPaintPath);
+        canvas.drawCircle(circleXPointer,circleYPointer,80,mPaintCircle);
+
+        /*for(int i=0;i<clocks.length-1;i++) {
+            //计算控制点
+            angle = (clocks[i] * 30 + clocks[i+1] * 30)/2;     //小时数乘上30度
+            float controlPointerX = (float) (((tide[i] + tide[i+1])/3)* Math.sin(angle*Math.PI/180) + circleXPointer);
+            float controlPointerY = (float) (circleYPointer - ((tide[i] + tide[i+1])/3) * Math.cos(angle*Math.PI/180));
+            canvas.drawCircle(controlPointerX, controlPointerY, 1, mPaintCircle);
+            //绘制二阶贝塞尔曲线
+            path.quadTo(controlPointerX, controlPointerY, points.get(i+1).getX(), points.get(i+1).getY());
+        }*/
+
+        /*float mFirstMultiplier = 0.3f;
+        float mSecondMultiplier = 1 - mFirstMultiplier;
         for (int b = 0; b < length; b += 2) {
             int nextIndex = b + 2 < length ? b + 2 : b;
             int nextNextIndex = b + 4 < length ? b + 4 : nextIndex;
-            // 设置第一个控制点
             calc(points, p1, b, nextIndex, mSecondMultiplier);
-            // 设置第二个控制点
             p2.setX(points.get(nextIndex));
             p2.setY(points.get(nextIndex + 1));
-            // 设置第三个控制点
             calc(points, p3, nextIndex, nextNextIndex, mFirstMultiplier);
-            // 最后一个点就是赛贝尔曲线上的点
             //canvas.drawCircle(p1.getX(), p1.getY(), 2, mPaintPath);
             //canvas.drawCircle(p2.getX(), p2.getY(), 2, mPaintPath);
             //canvas.drawCircle(p3.getX(), p3.getY(), 2, mPaintPath);
@@ -182,114 +218,13 @@ public class DrawView extends View {
             path.cubicTo(p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY());
         }
         path.close();
-        canvas.drawPath(path,mPaintPath);
+        canvas.drawPath(path,mPaintPath);*/
 
-        //绘制贝塞尔曲线后再画圆
-        mPaintPath.setStrokeWidth(40);      //调整画笔大小
-        canvas.drawCircle(circleXPointer, circleYPointer, 90, mPaintPath);
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
 
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
-
-        // Draw the text.
-        canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);
-
-        // Draw the example drawable on top of the text.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
-        }
     }
 
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return mExampleString;
-    }
 
-    /**
-     * Sets the view's example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
-    public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return mExampleColor;
-    }
-
-    /**
-     * Sets the view's example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
-     */
-    public void setExampleColor(int exampleColor) {
-        mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
-    }
-
-    /**
-     * Sets the view's example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example drawable attribute value.
-     *
-     * @return The example drawable attribute value.
-     */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
-
-    /**
-     * Sets the view's example drawable attribute value. In the example view, this drawable is
-     * drawn above the text.
-     *
-     * @param exampleDrawable The example drawable attribute value to use.
-     */
-    public void setExampleDrawable(Drawable exampleDrawable) {
-        mExampleDrawable = exampleDrawable;
-    }
 
     /**
      * 计算控制点
