@@ -137,7 +137,6 @@ public class DrawView extends View {
         }*/
 
         //初始化时间数据、潮汐数据和颜色数据
-
         int[] clocks = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};         //时间
         int[] tide = new int[]{130,150,165,130,130,100,100,200,120,110,135,128};     //潮汐数据
         int[] doughnutColors = new int[3];                              //颜色数据
