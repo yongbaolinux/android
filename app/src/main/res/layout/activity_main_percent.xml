@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg3">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="false"
+        android:background="#1fffffff"
+        android:id="@+id/linearLayout"
+        android:layout_alignParentTop="false"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignStart="@+id/linearLayout2"
+        android:orientation="vertical"
+        app:layout_widthPercent="80%"
+        app:layout_heightPercent="60%"
+        app:layout_marginTopPercent="5%">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignLeft="@+id/linearLayout2"
+            android:layout_alignStart="@+id/linearLayout2"
+            android:height="30dp"
+            android:id="@+id/todayDateInfo"
+            android:gravity="center" />
+
+        <net.diskroom.weather.DrawView
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            app:exampleString=""
+            android:layout_height="200dp"
+            android:layout_weight="3" />
+        <!--<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="280dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignLeft="@+id/linearLayout2"
+            android:layout_alignStart="@+id/linearLayout2"
+            android:textAlignment="center"
+            android:height="210dp"
+            android:id="@+id/drawing" />-->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:height="40dp"
+            android:id="@+id/spread"
+            android:background="#4fffffff"
+            android:layout_gravity="bottom" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            app:layout_heightPercent="20%"
+            android:background="#1fffffff"
+            android:gravity="bottom"
+            android:baselineAligned="false"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/todayWeekday"
+                android:editable="false"
+                android:text=""
+                android:textColor="#fff"
+                android:width="60dp"
+                android:height="@dimen/dp50"
+                android:textSize="20dp"
+                android:gravity="center" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/WindDirection"
+                        android:id="@+id/textView4"
+                        android:width="120dp"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="@dimen/dp12"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/S.W."
+                        android:id="@+id/todayWindDirection"
+                        android:textColor="#fff"
+                        android:gravity="center_vertical|left"
+                        android:textSize="@dimen/sp16"
+                        android:layout_gravity="center"
+                        android:width="50dp"
+                        android:paddingTop="@dimen/dp4" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/RainRate"
+                        android:id="@+id/textView8"
+                        android:textColor="#fff"
+                        android:textSize="12sp"
+                        android:paddingLeft="@dimen/dp12"
+                        android:gravity="center_vertical|left"
+                        android:width="120dp"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/EightPercent"
+                        android:id="@+id/todayRainRate"
+                        android:textColor="#fff"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="12sp"
+                        android:paddingBottom="@dimen/dp4" />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=""
+                android:id="@+id/todayDate"
+                android:width="50dp"
+                android:textColor="#fff"
+                android:paddingBottom="10px"
+                android:gravity="center_vertical|center_horizontal" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="#1fffffff"
+        android:id="@+id/linearLayout2"
+        app:layout_widthPercent="80%"
+        app:layout_heightPercent="25%"
+        app:layout_marginBottomPercent="5%">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tomorrow"
+                android:editable="false"
+                android:text=""
+                android:textColor="#fff"
+                android:width="60dp"
+                android:height="@dimen/dp50"
+                android:textSize="20dp"
+                android:gravity="center" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_widthPercent="80%"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/WindDirection"
+                        android:id="@+id/WindDirection"
+                        app:layout_widthPercent="20%"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp20"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/dp4"
+                        android:width="120dp"
+                        android:paddingLeft="@dimen/dp12"
+                        android:gravity="center_vertical|left" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/S.W."
+                        android:id="@+id/SW"
+                        android:textColor="#fff"
+                        android:gravity="center_vertical|left"
+                        android:textSize="@dimen/sp16"
+                        android:layout_gravity="center"
+                        app:layout_widthPercent="50%"
+                        android:paddingTop="@dimen/dp4" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/RainRate"
+                        android:id="@+id/RainRate"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:paddingLeft="@dimen/dp12"
+                        android:gravity="center_vertical|left"
+                        android:width="120dp"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/EightPercent"
+                        android:id="@+id/EightPercent"
+                        android:textColor="#fff"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="12sp"
+                        android:paddingBottom="@dimen/dp4" />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=""
+                android:id="@+id/date"
+                android:width="50dp"
+                android:textColor="#fff"
+                android:paddingBottom="10px"
+                android:gravity="center_vertical|center_horizontal" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:text=""
+            android:id="@+id/line1"
+            android:elegantTextHeight="false"
+            android:background="#fff" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tomorrow2"
+                android:text=""
+                android:textColor="#ffffff"
+                android:width="60dp"
+                android:height="@dimen/dp50"
+                android:textSize="18dp"
+                android:gravity="center"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/WindDirection"
+                        android:id="@+id/textView"
+                        android:width="120dp"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="@dimen/dp12"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/S.W."
+                        android:id="@+id/SW2"
+                        android:textColor="#fff"
+                        android:gravity="center_vertical|left"
+                        android:textSize="@dimen/sp16"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/dp4"
+                        android:width="50dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/RainRate"
+                        android:id="@+id/textView3"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:paddingLeft="@dimen/dp12"
+                        android:gravity="center_vertical|left"
+                        android:width="120dp"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/dp4"
+                        android:password="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/EightPercent"
+                        android:id="@+id/EightPercent2"
+                        android:textColor="#fff"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="@dimen/sp16"
+                        android:paddingBottom="@dimen/dp4" />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/date2"
+                android:width="50dp"
+                android:text=""
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="#fff" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:text=""
+            android:id="@+id/line2"
+            android:elegantTextHeight="false"
+            android:background="#fff" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tomorrow3"
+                android:text=""
+                android:textColor="#ffffff"
+                android:width="60dp"
+                android:height="@dimen/dp50"
+                android:textSize="20dp"
+                android:gravity="center"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/WindDirection"
+                        android:id="@+id/textView5"
+                        android:width="120dp"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:gravity="center_vertical|left"
+                        android:paddingLeft="@dimen/dp12"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/S.W."
+                        android:id="@+id/SW3"
+                        android:textColor="#fff"
+                        android:gravity="center_vertical|left"
+                        android:textSize="@dimen/sp16"
+                        android:layout_gravity="center"
+                        android:width="50dp"
+                        android:paddingTop="@dimen/dp4" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/RainRate"
+                        android:id="@+id/textView7"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/sp16"
+                        android:paddingLeft="@dimen/dp12"
+                        android:gravity="center_vertical|left"
+                        android:width="120dp"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/dp4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/EightPercent"
+                        android:id="@+id/EightPercent3"
+                        android:textColor="#fff"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="12sp"
+                        android:paddingBottom="@dimen/dp4" />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/date3"
+                android:width="50dp"
+                android:textColor="#fff"
+                android:text=""
+                android:gravity="center_vertical|center_horizontal" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.percent.PercentRelativeLayout>
