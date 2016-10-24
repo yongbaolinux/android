@@ -16,6 +16,7 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
@@ -117,8 +118,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main_percent);
+        //LogUtils.v(this.getWindowManager().getDefaultDisplay().getHeight());
+        //LogUtils.v(this.getWindowManager().getDefaultDisplay().getWidth());
+        //DisplayMetrics dm = new DisplayMetrics();
+        //this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        //LogUtils.v(dm.widthPixels);
+        //LogUtils.v(dm.heightPixels);
         //LogUtils.v("the threadId is "+Thread.currentThread().getId());
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 String geoInfo = HttpUtils.get(geoUrl);
                 try {
                     JSONObject geoObject = new JSONObject(geoInfo);
-                    LogUtils.v(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city"));
+                    String city = String.valueOf(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city").getClass());
                 } catch (Exception e){
                     e.printStackTrace();
                 }

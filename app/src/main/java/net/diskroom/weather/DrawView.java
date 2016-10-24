@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
+import com.apkfuns.logutils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +130,8 @@ public class DrawView extends View {
 
         height = getHeight();
         width = getWidth();
+        //LogUtils.v(height);
+        //LogUtils.v(width);
         circleXPointer = width / 2;                 //圆心 X坐标
         circleYPointer = height / 2 - 30;           //圆心 Y坐标
 
@@ -159,8 +163,8 @@ public class DrawView extends View {
             yPointer = (float) (circleYPointer - tide[i] * Math.cos(angle*Math.PI/180));
             Point point = new Point(xPointer, yPointer);
             points.add(point);
-            canvas.drawCircle(xPointer, yPointer, 1, mPaintCircle);
-            canvas.drawLine(circleXPointer,circleYPointer,xPointer,yPointer,mPaintLine);
+            //canvas.drawCircle(xPointer, yPointer, 1, mPaintCircle);
+            //canvas.drawLine(circleXPointer,circleYPointer,xPointer,yPointer,mPaintLine);
         }
 
         Path path = new Path();
@@ -188,10 +192,10 @@ public class DrawView extends View {
 
         //布尔运算去掉中间部分 API19
         //Path circlePath = new Path();
-        //circlePath.addCircle(circleXPointer,circleYPointer,50,Path.Direction.CW);
-        //path.op(circlePath, Path.Op.DIFFERENCE);
+        //circlePath.addCircle(circleXPointer, circleYPointer, 50, Path.Direction.CW);   //CW 顺时针path
+        //path.op(circlePath, Path.Op.DIFFERENCE);                                    //DIFFERENCE 减去交集剩余的部分
         canvas.drawPath(path,mPaintPath);
-        canvas.drawCircle(circleXPointer,circleYPointer,80,mPaintCircle);
+        //canvas.drawCircle(circleXPointer,circleYPointer,2,mPaintCircle);
 
         /*for(int i=0;i<clocks.length-1;i++) {
             //计算控制点

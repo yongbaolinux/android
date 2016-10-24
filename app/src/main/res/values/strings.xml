@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">weather</string>
-    <string name="WindDirection">Wind Direction</string>
-    <string name="RainRate">Rain Rate</string>
+    <string name="WindDirection">风向</string>
+    <string name="RainRate">降水概率</string>
     <string name="S.W."></string>
     <string name="EightPercent"></string>
 </resources>

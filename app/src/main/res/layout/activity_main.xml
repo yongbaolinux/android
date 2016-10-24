@@ -26,7 +26,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="280dp"
             android:layout_below="@+id/linearLayout"
             android:layout_alignLeft="@+id/linearLayout2"
             android:layout_alignStart="@+id/linearLayout2"
@@ -35,7 +34,7 @@
             android:gravity="center" />
 
         <net.diskroom.weather.DrawView
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="220dp"
             app:exampleDimension="24sp"
             app:exampleString=""
