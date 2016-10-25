@@ -1,10 +1,12 @@
 package net.diskroom.weather;
 
+import java.net.ContentHandler;
 import java.net.URLEncoder;
 import java.security.Provider;
 import java.util.ArrayList;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -36,6 +38,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final int foreacastLength = 4;       //天气预报面板下 预报天气的最大天数
     private static final int UPDATE_WEATHER = 1;        //修改天气主面板的消息类型
+    private static final int SWITCH_CITY = 2;           //定位到城市 弹出切换城市对话框
 
     private TextView todayDateInfo;
 
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            //更新主面板天气数据
             if (msg.what == UPDATE_WEATHER) {
                 todayDateInfo = (TextView) findViewById(R.id.todayDateInfo);
 
@@ -111,9 +115,21 @@ public class MainActivity extends AppCompatActivity {
                 date3.setText(forecast.get(3).getDate());
 
             }
+
+            //弹出切换定位城市对话框
+            if(msg.what == SWITCH_CITY){
+                LogUtils.v(msg);
+                AlertDialog switchCityDialog = new AlertDialog.Builder(MainActivity.this).setMessage("系统定位到您在"+msg.obj+",需要切换到"+msg.obj+"吗?").create();
+                switchCityDialog.show();
+            }
         }
     };
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(location == null){
+        if (location == null) {
             //首先使用gps进行定位 如果获取location失败 则检查wifi 使用network进行定位
             if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 Toast.makeText(MainActivity.this, "GPS无法正常定位，请在设置中打开基于网络的位置服务进行更精确的定位", Toast.LENGTH_LONG).show();
@@ -161,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
             }
             location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
-        if(location == null){
-            Toast.makeText(MainActivity.this,"无法进行定位",Toast.LENGTH_LONG).show();
+        if (location == null) {
+            Toast.makeText(MainActivity.this, "无法进行定位", Toast.LENGTH_LONG).show();
             return;
         }
         //Toast.makeText(MainActivity.this,location.getLatitude()+":"+location.getLongitude(),Toast.LENGTH_LONG).show();
@@ -171,18 +187,23 @@ public class MainActivity extends AppCompatActivity {
         final Location finalLocation = location;
         new Thread() {
             public void run() {
-                String geoUrl = "http://api.map.baidu.com/geocoder/v2/?ak=846pey6G0prSi7UZQ8NneYAjLwGvj2tf&location="+ finalLocation.getLatitude()+","+ finalLocation.getLongitude()+"&output=json&pois=1&mcode=1&mcode=1F:B9:16:01:95:2B:71:4E:FD:F8:E0:B8:09:07:2E:80:1A:77:6F:A2;net.diskroom.weather";
+                String geoUrl = "http://api.map.baidu.com/geocoder/v2/?ak=846pey6G0prSi7UZQ8NneYAjLwGvj2tf&location=" + finalLocation.getLatitude() + "," + finalLocation.getLongitude() + "&output=json&pois=1&mcode=1&mcode=1F:B9:16:01:95:2B:71:4E:FD:F8:E0:B8:09:07:2E:80:1A:77:6F:A2;net.diskroom.weather";
                 String geoInfo = HttpUtils.get(geoUrl);
                 try {
                     JSONObject geoObject = new JSONObject(geoInfo);
-                    String city = String.valueOf(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city").getClass());
-                } catch (Exception e){
+                    String city = String.valueOf(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city"));
+                    Message msg = new Message();
+                    msg.what = SWITCH_CITY;
+                    msg.obj = city;
+                    handler.sendMessage(msg);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
 
         }.start();
+
 
         new Thread() {
             public void run() {
@@ -232,7 +253,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
 
 }
