@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,7 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -30,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -118,9 +122,36 @@ public class MainActivity extends AppCompatActivity {
 
             //弹出切换定位城市对话框
             if(msg.what == SWITCH_CITY){
-                LogUtils.v(msg);
-                AlertDialog switchCityDialog = new AlertDialog.Builder(MainActivity.this).setMessage("系统定位到您在"+msg.obj+",需要切换到"+msg.obj+"吗?").create();
+                //LogUtils.v(msg);
+                final AlertDialog switchCityDialog = new AlertDialog.Builder(MainActivity.this).setCancelable(false).create();
+                Window switchCityDialogWindow = switchCityDialog.getWindow();   //获取对话框window对象
+                //WindowManager.LayoutParams switchCityDialogWindowLP = switchCityDialogWindow.getAttributes();
+                //switchCityDialogWindowLP.alpha = 0.6f;
+                //switchCityDialogWindow.setAttributes(switchCityDialogWindowLP);
+                //switchCityDialogWindow.requestFeature(Window.FEATURE_NO_TITLE);
                 switchCityDialog.show();
+                switchCityDialogWindow.setContentView(R.layout.switch_city_dialog);
+                //设置对话框文本及绑定监听事件
+                TextView switch_city_dialog_msg = (TextView)switchCityDialogWindow.findViewById(R.id.switch_city_dialog_msg);
+                switch_city_dialog_msg.setText("系统定位到您在" + msg.obj + ",需要切换到" + msg.obj + "吗?");
+                TextView switch_city_dialog_cancel = (TextView)switchCityDialogWindow.findViewById(R.id.switch_city_dialog_cancel);
+                TextView switch_city_dialog_sure = (TextView)switchCityDialogWindow.findViewById(R.id.switch_city_dialog_sure);
+                switch_city_dialog_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchCityDialog.dismiss();
+                    }
+                });
+                switch_city_dialog_sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Thread(){
+                            public void run(){
+
+                            }
+                        };
+                    }
+                });
             }
         }
     };
@@ -176,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
         }
         if (location == null) {
             Toast.makeText(MainActivity.this, "无法进行定位", Toast.LENGTH_LONG).show();
@@ -192,10 +224,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject geoObject = new JSONObject(geoInfo);
                     String city = String.valueOf(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city"));
-                    Message msg = new Message();
-                    msg.what = SWITCH_CITY;
-                    msg.obj = city;
-                    handler.sendMessage(msg);
+                    //Message msg = new Message();
+                    //msg.what = SWITCH_CITY;
+                    //msg.obj = city;
+                    //handler.sendMessage(msg);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
