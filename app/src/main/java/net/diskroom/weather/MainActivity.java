@@ -224,11 +224,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject geoObject = new JSONObject(geoInfo);
                     String city = String.valueOf(geoObject.getJSONObject("result").getJSONObject("addressComponent").get("city"));
-                    //Message msg = new Message();
-                    //msg.what = SWITCH_CITY;
-                    //msg.obj = city;
-                    //handler.sendMessage(msg);
-
+                    Message msg = new Message();
+                    msg.what = SWITCH_CITY;
+                    msg.obj = city;
+                    handler.sendMessage(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
